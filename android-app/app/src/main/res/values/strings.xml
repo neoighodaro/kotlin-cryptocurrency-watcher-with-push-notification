@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">CryptoAlat</string>
+  <string name="channel_name">Crypto</string>
+  <string name="channel_description">To receive updates about changes in crypto-currency value</string>
+</resources>
