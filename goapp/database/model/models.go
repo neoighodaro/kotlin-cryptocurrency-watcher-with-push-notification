@@ -26,8 +26,8 @@ type Device struct {
 	ETHMax int64  `json:"eth_max"`
 }
 
-// DeviceCollection represents a collection of Devices
-type DeviceCollection struct {
+// Devices represents a collection of Devices
+type Devices struct {
 	Devices []Device `json:"items"`
 }
 
@@ -152,4 +152,34 @@ func GetCoinPrices(simulate bool) (CoinPrice, error) {
 	}
 
 	return coinPrice, nil
+}
+
+func minMaxQuery(curr string) string {
+	return `(` + curr + `_min > 0 AND ` + curr + `_min > ?) OR (` + curr + `_max > 0 AND ` + curr + `_max < ?)`
+}
+
+// FindDevicesToBeNotified returns the devices that are within the range
+func FindDevicesToBeNotified(db *sql.DB, prices CoinPrice) (Devices, error) {
+	devices := Devices{}
+
+	for currency, price := range prices {
+		rows, err := db.Query("SELECT * FROM devices WHERE "+minMaxQuery(currency), price, price)
+		if err != nil {
+			return devices, err
+		}
+
+		defer rows.Close()
+
+		for rows.Next() {
+			device := Device{}
+			err = rows.Scan(&device.ID, &device.UUID, &device.BTCMin, &device.BTCMax, &device.ETHMin, &device.ETHMax)
+			if err != nil {
+				return devices, err
+			}
+
+			devices.Devices = append(devices.Devices, device)
+		}
+	}
+
+	return devices, nil
 }

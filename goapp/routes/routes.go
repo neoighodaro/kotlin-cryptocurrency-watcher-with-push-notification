@@ -83,15 +83,21 @@ func GetPrices() echo.HandlerFunc {
 }
 
 // SimulatePriceChanges simulates the prices changes
-func SimulatePriceChanges() echo.HandlerFunc {
+func SimulatePriceChanges(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		prices, err := model.GetCoinPrices(true)
 		if err != nil {
 			panic(err)
 		}
 
+		devices, err := model.FindDevicesToBeNotified(db, prices)
+		if err != nil {
+			panic(err)
+		}
+
 		var resp = make(map[string]interface{})
 		resp["prices"] = prices
+		resp["devices"] = devices
 		resp["status"] = "success"
 
 		return c.JSON(http.StatusOK, resp)
