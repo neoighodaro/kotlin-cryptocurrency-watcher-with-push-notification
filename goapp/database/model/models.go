@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"errors"
+
+	"../../notification"
 )
 
 // CoinPrice represents a single coin resource
@@ -178,6 +180,8 @@ func FindDevicesToBeNotified(db *sql.DB, prices CoinPrice) (Devices, error) {
 			}
 
 			devices.Devices = append(devices.Devices, device)
+
+			notification.SendNotification(currency, price, device.UUID)
 		}
 	}
 

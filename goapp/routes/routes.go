@@ -95,10 +95,11 @@ func SimulatePriceChanges(db *sql.DB) echo.HandlerFunc {
 			panic(err)
 		}
 
-		var resp = make(map[string]interface{})
-		resp["prices"] = prices
-		resp["devices"] = devices
-		resp["status"] = "success"
+		resp := map[string]interface{}{
+			"prices":  prices,
+			"devices": devices,
+			"status":  "success",
+		}
 
 		return c.JSON(http.StatusOK, resp)
 	}
