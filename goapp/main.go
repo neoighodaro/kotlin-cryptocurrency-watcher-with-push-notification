@@ -19,7 +19,7 @@ func main() {
 
 	e.GET("/settings", routes.GetDeviceSetting(db))
 	e.POST("/settings", routes.SaveDeviceSettings(db))
-	e.GET("/blah", routes.GetPrices())
+	e.GET("/simulate", routes.SimulatePriceChanges())
 
 	e.Logger.Fatal(e.Start(":9000"))
 }

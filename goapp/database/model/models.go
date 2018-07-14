@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/big"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -111,11 +113,19 @@ func SaveSettings(db *sql.DB, uuid string, field map[string]int64) (Device, erro
 }
 
 // GetCoinPrices gets the current coin prices
-func GetCoinPrices() (CoinPrice, error) {
+func GetCoinPrices(simulate bool) (CoinPrice, error) {
 	coinPrice := make(CoinPrice)
 	currencies := [2]string{"ETH", "BTC"}
 
 	for _, curr := range currencies {
+		if simulate == true {
+			min := 1000.0
+			max := 15000.0
+			price, _ := big.NewFloat(min + rand.Float64()*(max-min)).SetPrec(8).Float64()
+			coinPrice[curr] = price
+			continue
+		}
+
 		url := fmt.Sprintf("https://min-api.cryptocompare.com/data/pricehistorical?fsym=%s&tsyms=USD&ts=%d", curr, time.Now().Unix())
 		res, err := http.Get(url)
 		if err != nil {

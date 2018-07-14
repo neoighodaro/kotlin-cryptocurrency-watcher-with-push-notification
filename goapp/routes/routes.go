@@ -73,11 +73,27 @@ func SaveDeviceSettings(db *sql.DB) echo.HandlerFunc {
 // GetPrices returns the coin prices
 func GetPrices() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		prices, err := model.GetCoinPrices()
+		prices, err := model.GetCoinPrices(false)
 		if err != nil {
 			return c.JSON(http.StatusBadGateway, err)
 		}
 
 		return c.JSON(http.StatusOK, prices)
+	}
+}
+
+// SimulatePriceChanges simulates the prices changes
+func SimulatePriceChanges() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		prices, err := model.GetCoinPrices(true)
+		if err != nil {
+			panic(err)
+		}
+
+		var resp = make(map[string]interface{})
+		resp["prices"] = prices
+		resp["status"] = "success"
+
+		return c.JSON(http.StatusOK, resp)
 	}
 }
