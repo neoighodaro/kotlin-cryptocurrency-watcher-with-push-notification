@@ -16,7 +16,7 @@ import (
 )
 
 // CoinPrice represents a single coin resource
-type CoinPrice map[string]float64
+type CoinPrice map[string]interface{}
 
 // Device represents a single device resource
 type Device struct {
@@ -124,7 +124,7 @@ func GetCoinPrices(simulate bool) (CoinPrice, error) {
 			min := 1000.0
 			max := 15000.0
 			price, _ := big.NewFloat(min + rand.Float64()*(max-min)).SetPrec(8).Float64()
-			coinPrice[curr] = price
+			coinPrice[curr] = map[string]interface{}{"USD": price}
 			continue
 		}
 
@@ -149,7 +149,7 @@ func GetCoinPrices(simulate bool) (CoinPrice, error) {
 
 		priceMap := f.(map[string]interface{})[curr]
 		for _, price := range priceMap.(map[string]interface{}) {
-			coinPrice[curr] = price.(float64)
+			coinPrice[curr] = map[string]interface{}{"USD": price.(float64)}
 		}
 	}
 
@@ -165,7 +165,8 @@ func FindDevicesToBeNotified(db *sql.DB, prices CoinPrice) (Devices, error) {
 	devices := Devices{}
 
 	for currency, price := range prices {
-		rows, err := db.Query("SELECT * FROM devices WHERE "+minMaxQuery(currency), price, price)
+		pricing := price.(map[string]interface{})
+		rows, err := db.Query("SELECT * FROM devices WHERE "+minMaxQuery(currency), pricing["USD"], pricing["USD"])
 		if err != nil {
 			return devices, err
 		}
@@ -181,7 +182,7 @@ func FindDevicesToBeNotified(db *sql.DB, prices CoinPrice) (Devices, error) {
 
 			devices.Devices = append(devices.Devices, device)
 
-			notification.SendNotification(currency, price, device.UUID)
+			notification.SendNotification(currency, pricing["USD"].(float64), device.UUID)
 		}
 	}
 

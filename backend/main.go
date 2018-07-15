@@ -17,8 +17,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/settings", routes.GetDeviceSetting(db))
-	e.POST("/settings", routes.SaveDeviceSettings(db))
+	e.GET("/fetch-values", routes.GetPrices())
+	e.POST("/btc-pref", routes.SaveDeviceSettings(db))
+	e.POST("/eth-pref", routes.SaveDeviceSettings(db))
 	e.GET("/simulate", routes.SimulatePriceChanges(db))
 
 	e.Logger.Fatal(e.Start(":9000"))

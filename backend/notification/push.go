@@ -2,13 +2,14 @@ package notification
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/pusher/push-notifications-go"
 )
 
 const (
-	instanceID = "YOUR_INSTANCE_ID_HERE"
-	secretKey  = "YOUR_SECRET_KEY_HERE"
+	instanceID = "PUSHER_BEAMS_INSTANCE_ID"
+	secretKey  = "PUSHER_BEAMS_SECRET_KEY"
 )
 
 // SendNotification sends push notification to devices
@@ -22,18 +23,16 @@ func SendNotification(currency string, price float64, uuid string) error {
 		"fcm": map[string]interface{}{
 			"notification": map[string]interface{}{
 				"title": currency + " Price Change",
-				"body":  fmt.Sprintf("The price of %s has changed to %f", currency, price),
+				"body":  fmt.Sprintf("The price of %s has changed to $%s", currency, strconv.FormatFloat(price, 'f', 2, 64)),
 			},
 		},
 	}
 
 	interest := fmt.Sprintf("%s_%s_changed", uuid, currency)
-	pubID, err := notifications.Publish([]string{interest}, publishRequest)
+	_, err = notifications.Publish([]string{interest}, publishRequest)
 	if err != nil {
 		return err
 	}
-
-	println(pubID)
 
 	return nil
 }
