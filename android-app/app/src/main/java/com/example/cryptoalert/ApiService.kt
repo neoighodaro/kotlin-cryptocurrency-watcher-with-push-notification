@@ -1,4 +1,4 @@
-package com.example.cryptoalat
+package com.example.cryptoalert
 
 import okhttp3.RequestBody
 import retrofit2.Call
