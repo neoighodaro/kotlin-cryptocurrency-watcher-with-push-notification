@@ -160,8 +160,8 @@ func minMaxQuery(curr string) string {
 	return `(` + curr + `_min > 0 AND ` + curr + `_min > ?) OR (` + curr + `_max > 0 AND ` + curr + `_max < ?)`
 }
 
-// FindDevicesToBeNotified returns the devices that are within the range
-func FindDevicesToBeNotified(db *sql.DB, prices CoinPrice) (Devices, error) {
+// NotifyDevicesOfPriceChange returns the devices that are within the range
+func NotifyDevicesOfPriceChange(db *sql.DB, prices CoinPrice) (Devices, error) {
 	devices := Devices{}
 
 	for currency, price := range prices {

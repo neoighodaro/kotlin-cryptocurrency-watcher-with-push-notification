@@ -25,7 +25,6 @@ func formValue(c echo.Context, key string) (string, error) {
 
 func getCoinValueFromRequest(key string, c echo.Context) (int64, error) {
 	value, _ := formValue(c, key)
-	println("Key:", key, "Value:", value)
 	if value != "" {
 		setting, err := strconv.ParseInt(value, 10, 64)
 		if err == nil {
@@ -89,7 +88,7 @@ func SimulatePriceChanges(db *sql.DB) echo.HandlerFunc {
 			panic(err)
 		}
 
-		devices, err := model.FindDevicesToBeNotified(db, prices)
+		devices, err := model.NotifyDevicesOfPriceChange(db, prices)
 		if err != nil {
 			panic(err)
 		}
