@@ -21,7 +21,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    var prefs: Prefs? = null
+    private var prefs: Prefs? = null
 
     private val retrofit: ApiService by lazy {
         val httpClient = OkHttpClient.Builder()
@@ -87,10 +87,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun createDialog(source:String){
-
+    private fun createDialog(source:String) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.alert_layout,null);
+        val view = LayoutInflater.from(this).inflate(R.layout.alert_layout,null)
+
         builder.setTitle("Set limits")
                 .setMessage("Notifications will be sent to you when the value exceeds or goes below the maximum and minimum values")
                 .setView(view)

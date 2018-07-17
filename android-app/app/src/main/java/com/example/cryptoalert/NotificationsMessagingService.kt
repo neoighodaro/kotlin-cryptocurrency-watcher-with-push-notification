@@ -37,12 +37,9 @@ class NotificationsMessagingService : MessagingService() {
             channel.description = description
             notificationManager!!.createNotificationChannel(channel)
             notificationManager.notify(notificationId, mBuilder.build())
-
         } else {
             val notificationManager =  NotificationManagerCompat.from(this)
             notificationManager.notify(notificationId, mBuilder.build())
         }
-
     }
-
 }
