@@ -1,6 +1,8 @@
 # Crypto Alat
 An app that shows notifications when crypto value exceeds your saved limit.
 
+[Part One](https://pusher.com/tutorials/cryptocurrency-kotlin-go-part-1) | [Part Two](https://pusher.com/tutorials/cryptocurrency-kotlin-go-part-2)
+
 
 ## Getting Started
 
